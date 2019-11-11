@@ -1,0 +1,10 @@
+.drones .control{
+    width: 100%;
+}
+.drones .control tr{
+    border-bottom: 1px rgb(148, 148, 148) solid;
+}
+
+.drones .control table  tr{
+    border-bottom: 0;
+}
