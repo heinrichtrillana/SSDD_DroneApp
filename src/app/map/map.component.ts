@@ -10,10 +10,10 @@ export class MapComponent implements OnInit {
 
   public mapOptions =  {
     layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
+      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 25, attribution: '...' })
     ],
-    zoom: 5,
-    center: latLng(46.879966, -121.726909)
+    zoom: 15,
+    center: latLng(40.3886441, -3.6295277)
   };
   constructor() { }
 
