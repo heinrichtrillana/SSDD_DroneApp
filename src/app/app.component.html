@@ -3,18 +3,32 @@
     <h1 class="display-4">MQTT Drone Application</h1>
     <hr>
   </div>
-  <div class="row application-content">
+
+  <div class="row application-content pb-2">
     <!-- MAP -->
-    
     <div class="col-md-9">
       <div class="card p-0 d-flex align-items-stretch h-100">
-        <app-map class="h-100"></app-map>
+        <app-map class="h-100" [drones]="drones"></app-map>
       </div>
     </div>
     
-
     <div class="col-md-3 h-100"> <!-- BUTTONS-->
           <app-pannel class="h-100" [drones]="drones"></app-pannel>
     </div>
   </div>
+
+  <div class="row help" *ngIf="_commands.selectedOperation">
+      <div class="col-md-9">
+        <div class="alert alert-primary h-75" role="alert">
+          Click on a position on the map.
+        </div>          
+      </div>
+  
+      <div class="col-md-3 p-0" role="alert">
+          <button class="btn btn-danger btn-block h-75" 
+          (click)="_commands.selectedOperation = null"> 
+            Cancel Operation
+          </button>
+      </div>
+    </div>
 </div>

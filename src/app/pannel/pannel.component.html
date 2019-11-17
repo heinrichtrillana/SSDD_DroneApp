@@ -1,18 +1,36 @@
 <div class="row h-25">
   <div class="card w-100">
     <div class="card-body">
-      <h4 class="card-title">Hive</h4>
+      <h4 class="card-title">Swarm</h4>
       <table class="control w-100">
         <tbody>
           <tr>
-            <td><button class="btn btn-info btn-block">Form line</button></td>
-            <td><button class="btn btn-info btn-block">Form column</button></td>
+            <td>
+              <button class="btn btn-info btn-block" 
+              (click)="formLine()"
+              [disabled]="!drones || !drones.length || _commands.selectedOperation">
+                Line</button>
+            </td>
+            <td>
+              <button class="btn btn-info btn-block" 
+              (click)="formColumn()"
+              [disabled]="!drones || !drones.length || _commands.selectedOperation">
+                Column</button>
+            </td>
           </tr>
           <tr>
             <td>
-              <button class="btn btn-info btn-block">Surround target</button>
+              <button class="btn btn-info btn-block" 
+              (click)="formCircle()"
+              [disabled]="!drones || !drones.length || _commands.selectedOperation">
+                Surround</button>
             </td>
-            <td><button class="btn btn-info btn-block">Sweep</button></td>
+            <td>
+              <button class="btn btn-info btn-block" 
+              (click)="sweep()"
+              [disabled]="!drones || !drones.length || _commands.selectedOperation">
+                Sweep</button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -77,8 +95,12 @@
               </ng-template>
             </td>
             <td>
-              <button class="btn btn-info" (click)="prueba()">Redirect</button>
+              <button class="btn btn-info" (click)="goTo(drone.id)" [disabled]="_commands.selectedOperation">GOTO</button>
+
             </td>
+          </tr>
+          <tr *ngIf="!drones || !drones.length" style="border: 0;">
+            <td class="text-muted text-center"> No drones available</td>
           </tr>
         </tbody>
       </table>

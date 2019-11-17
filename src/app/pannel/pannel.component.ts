@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Drone } from '../_models/drone.model';
+import { CommandsService } from '../_services/commands.service';
+
+import {Operation} from '../_models/operation.model'
 
 @Component({
   selector: 'app-pannel',
@@ -10,7 +13,7 @@ export class PannelComponent implements OnInit {
 
   @Input() drones : Drone[];
 
-  constructor() { }
+  constructor(private _commands : CommandsService) { }
 
   ngOnInit() {
   }
@@ -38,6 +41,26 @@ export class PannelComponent implements OnInit {
         break;
     } 
     return resul;
+  }
+
+  goTo( droneId : string ){
+    this._commands.selectedDrone = droneId;
+    this._commands.selectedOperation = Operation.GOTO;
+  }
+
+  private formLine(){
+    this._commands.selectedOperation = Operation.LINE;
+  }
+
+  private formColumn(){
+    this._commands.selectedOperation = Operation.COLUMN;
+  }
+
+  private formCircle(){
+    this._commands.selectedOperation = Operation.CIRCLE;
+  }
+  private sweep(){
+    this._commands.selectedOperation = Operation.SWEEP;
   }
 
 }

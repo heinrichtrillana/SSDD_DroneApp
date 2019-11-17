@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 
 import { Drone } from './_models/drone.model';
+import { CommandsService } from './_services/commands.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +14,15 @@ export class AppComponent {
 
   public drones : Drone[] = [];
 
-  constructor(){
+  constructor( private _commands : CommandsService ){
+
     console.log("Holaaa");
 
     this.drones.push({
       id : 'Dron de prueba',
       position : { 
-        x: 33,
-        y: 99
+        x: 40.397874,
+        y: -3.649002
       },
       rotation : {
         roll: 1,
@@ -37,13 +40,14 @@ export class AppComponent {
 
     this.drones.push({
       id : 'Dron de prueba',
-      position : null,
+      position : {
+        x : 40.384833,
+        y : -3.615731
+      },
       rotation : null,
       battery : null,
       rotor : null
     })
-
-    console.log(this.drones);
   }
 
 
