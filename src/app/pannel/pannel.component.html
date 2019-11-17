@@ -26,271 +26,58 @@
       <h4 class="card-title">Drones</h4>
       <table class="control">
         <tbody>
-          <tr>
-            <td>Drone 1</td>
+          <tr *ngFor= "let drone of drones">
+            <td>{{drone.id}}</td>
             <td>
               <table style="width: 80%;">
                 <tbody class="small">
                   <tr>
-                    <td><fa name="battery-three-quarters"></fa></td>
-                    <td><small class="text-muted">Battery:</small></td>
-                    <td align="right"><small class="text-muted">59%</small></td>
-                  </tr>
-                  <tr>
-                    <td><fa name="map-marker"></fa></td>
-                    <td><small class="text-muted">Position:</small></td>
-                    <td align="right">
-                      <small class="text-muted">( 112, 224 )</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="refresh"></fa></td>
-                    <td><small class="text-muted">Rotation:</small></td>
-                    <td align="right">
-                      <small class="text-muted">(20, 10, 10)</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="fighter-jet"></fa></td>
-                    <td><small class="text-muted">Rotors:</small></td>
-                    <td align="right">
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td>
-              <button class="btn btn-info">Redirect</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Drone 1</td>
-            <td>
-              <table style="width: 80%;">
-                <tbody class="small">
-                  <tr>
-                    <td><fa name="battery-empty"></fa></td>
-                    <td><small class="text-muted">Battery:</small></td>
-                    <td align="right"><small class="text-muted">1%</small></td>
-                  </tr>
-                  <tr>
-                    <td><fa name="map-marker"></fa></td>
-                    <td><small class="text-muted">Position:</small></td>
-                    <td align="right">
-                      <small class="text-muted">( 112, 224 )</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="refresh"></fa></td>
-                    <td><small class="text-muted">Rotation:</small></td>
-                    <td align="right">
-                      <small class="text-muted">(20, 10, 10)</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="fighter-jet"></fa></td>
-                    <td><small class="text-muted">Rotors:</small></td>
-                    <td align="right">
-                      <fa
-                        name="circle"
-                        style="color: red; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: red; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: red; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: red; padding-right: 2%;"
-                      ></fa>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td>
-              <button class="btn btn-info">Redirect</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Drone 1</td>
-            <td>
-              <table style="width: 80%;">
-                <tbody class="small">
-                  <tr>
-                    <td><fa name="battery-full"></fa></td>
+                    <td><fa [name]="batteryIcon(drone.battery)"></fa></td>
                     <td><small class="text-muted">Battery:</small></td>
                     <td align="right">
-                      <small class="text-muted">100%</small>
+                      <small *ngIf="drone.battery; else unknown" class="text-muted">{{drone.battery}}%</small>
                     </td>
                   </tr>
                   <tr>
                     <td><fa name="map-marker"></fa></td>
                     <td><small class="text-muted">Position:</small></td>
                     <td align="right">
-                      <small class="text-muted">( 112, 224 )</small>
+                      <small class="text-muted" *ngIf="drone.position; else unknown">
+                        {{'(' + drone.position.x + ',' + drone.position.y + ')'}}
+                      </small>
                     </td>
                   </tr>
                   <tr>
                     <td><fa name="refresh"></fa></td>
                     <td><small class="text-muted">Rotation:</small></td>
                     <td align="right">
-                      <small class="text-muted">(20, 10, 10)</small>
+                      <small class="text-muted" *ngIf="drone.rotation; else unknown">
+                          {{'(' + drone.rotation.roll + ',' + drone.rotation.pitch + ',' + drone.rotation.yaw + ')'}}
+                      </small>
                     </td>
                   </tr>
                   <tr>
                     <td><fa name="fighter-jet"></fa></td>
                     <td><small class="text-muted">Rotors:</small></td>
                     <td align="right">
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
+                      <ng-container *ngIf="drone.rotor; else unknown">
+                          <fa
+                          *ngFor="let rotor of drone.rotor"
+                          name="circle"
+                          style="padding-right: 2%;"
+                          [ngStyle]="{'color': rotor.state ? 'green' : 'orange' }"
+                        ></fa>
+                      </ng-container>
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <ng-template #unknown>
+                  <small class="text-muted">NA</small>
+              </ng-template>
             </td>
             <td>
-              <button class="btn btn-info">Redirect</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Drone 1</td>
-            <td>
-              <table style="width: 80%;">
-                <tbody class="small">
-                  <tr>
-                    <td><fa name="battery-quarter"></fa></td>
-                    <td><small class="text-muted">Battery:</small></td>
-                    <td align="right"><small class="text-muted">19%</small></td>
-                  </tr>
-                  <tr>
-                    <td><fa name="map-marker"></fa></td>
-                    <td><small class="text-muted">Position:</small></td>
-                    <td align="right">
-                      <small class="text-muted">( 112, 224 )</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="refresh"></fa></td>
-                    <td><small class="text-muted">Rotation:</small></td>
-                    <td align="right">
-                      <small class="text-muted">(20, 10, 10)</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="fighter-jet"></fa></td>
-                    <td><small class="text-muted">Rotors:</small></td>
-                    <td align="right">
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: gold; padding-right: 2%;"
-                      ></fa>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td>
-              <button class="btn btn-info">Redirect</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Drone 1</td>
-            <td>
-              <table style="width: 80%;">
-                <tbody class="small">
-                  <tr>
-                    <td><fa name="battery-three-quarters"></fa></td>
-                    <td><small class="text-muted">Battery:</small></td>
-                    <td align="right"><small class="text-muted">59%</small></td>
-                  </tr>
-                  <tr>
-                    <td><fa name="map-marker"></fa></td>
-                    <td><small class="text-muted">Position:</small></td>
-                    <td align="right">
-                      <small class="text-muted">( 112, 224 )</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="refresh"></fa></td>
-                    <td><small class="text-muted">Rotation:</small></td>
-                    <td align="right">
-                      <small class="text-muted">(20, 10, 10)</small>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><fa name="fighter-jet"></fa></td>
-                    <td><small class="text-muted">Rotors:</small></td>
-                    <td align="right">
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: green; padding-right: 2%;"
-                      ></fa>
-                      <fa
-                        name="circle"
-                        style="color: gold; padding-right: 2%;"
-                      ></fa>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td>
-              <button class="btn btn-info">Redirect</button>
+              <button class="btn btn-info" (click)="prueba()">Redirect</button>
             </td>
           </tr>
         </tbody>
