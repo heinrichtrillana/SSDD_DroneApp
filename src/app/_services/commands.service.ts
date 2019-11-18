@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 import { LatLng } from 'leaflet';
 
 import {Operation} from '../_models/operation.model'
+import { MqttService } from 'ngx-mqtt';
+import { Drone } from '../_models/drone.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,12 @@ export class CommandsService {
 
   public selectedOperation : Operation; //Operacion
   public selectedDrone : string; //Identificador del dron en caso de operaciones individuales.
+  
+  public drones : Drone[] = [];
 
   public coordinates : BehaviorSubject<LatLng> //Coordenadas de la operacion
 
-  constructor() { 
+  constructor(private _mqttService : MqttService) { 
     this.coordinates = new BehaviorSubject<LatLng>(null);
 
     this.coordinates.subscribe( coord => this.handleOperation( coord )); 
@@ -40,6 +44,7 @@ export class CommandsService {
           this.SWEEP(coord)
           break;
       default:
+          this.drones = null;
           this.selectedOperation = null;
           this.selectedDrone = null;      
           break;
@@ -50,14 +55,31 @@ export class CommandsService {
   private GOTO( droneId : string, coordinates : LatLng){
     console.log( droneId + " Going to " + coordinates.toString());
 
+    var msg = {topic:"./obj",
+              obj :[coordinates.lat,coordinates.lng]} 
+
+    this._mqttService.unsafePublish('swarm/' + droneId + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
     this.selectedOperation = null;
     this.selectedDrone = null;      
 
   }
 
   private LINE( coordinates : LatLng){
+
     console.log("Forming line at " + coordinates.lng);
 
+    const separation = 0.005;
+
+    this.drones.forEach( (x,i) =>{
+
+      var msg = {
+                  topic:"./obj",
+                  obj :[coordinates.lat,coordinates.lng + (i)*separation]
+                }
+                
+      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+
+    })
     this.selectedOperation = null;
     this.selectedDrone = null;      
 
@@ -65,6 +87,20 @@ export class CommandsService {
 
   private COLUMN( coordinates : LatLng){
     console.log("Forming column at " + coordinates.lat);
+
+    const separation = 0.005;
+
+    this.drones.forEach( (x,i) =>{
+
+      var msg = {
+                  topic:"./obj",
+                  obj :[coordinates.lat + (i)*separation ,coordinates.lng]
+                }
+                
+      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+
+    })
+
 
     this.selectedOperation = null;
     this.selectedDrone = null;      

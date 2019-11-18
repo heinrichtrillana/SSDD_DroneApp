@@ -13,7 +13,7 @@ import { interval } from 'rxjs';
 export class MapComponent implements OnInit, OnChanges{
 
 
-  @Input() drones : Drone[];
+  @Input() markers : Layer[];
 
   public mapOptions =  {
     layers: [
@@ -23,64 +23,16 @@ export class MapComponent implements OnInit, OnChanges{
     center: latLng(40.3886441, -3.6295277)
   };
 
-  markers: Layer[] = [];
 
-  constructor(private _commands : CommandsService) {
-
-    interval(1000).subscribe(() => {
-      console.log('cghagbeu')
-      this.drones.forEach( x =>{
-        if(Math.random() > 0.5) {
-          x.position.x = x.position.x + Math.random()/1000;
-        }
-        else x.position.y = x.position.y + Math.random()/1000;
-      })
-
-      this.setMarkers(this.drones);
-
-      
-    })
-
-  }
+  constructor(private _commands : CommandsService) {}
 
   ngOnInit() {
-    this.setMarkers(this.drones)
   }
 
   ngOnChanges(){
-    
-    console.log(
-      "its changing"
-    )
-    this.markers = [];
-    this.setMarkers(this.drones);
   }
 
   clickHandler( event ){
     this._commands.coordinates.next(event.latlng);
   }
-
-  private setMarkers( drones : Drone[]){
-
-    this.markers = drones.map( (drone : Drone) =>{
-
-      return marker(
-        [drone.position.x, drone.position.y],
-        {
-          icon: icon({
-            iconSize: [ 25, 41 ],
-            iconAnchor: [ 13, 41 ],
-            iconUrl: 'assets/img/drone.png',
-            shadowUrl: 'leaflet/marker-shadow.png'
-          })        }
-      )
-    })
-
-    console.log(this.markers);
-  }
-
-	removeMarker() {
-		this.markers.pop();
-	}
-
 }

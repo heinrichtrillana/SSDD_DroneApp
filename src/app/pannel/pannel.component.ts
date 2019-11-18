@@ -13,7 +13,8 @@ export class PannelComponent implements OnInit {
 
   @Input() drones : Drone[];
 
-  constructor(private _commands : CommandsService) { }
+  constructor(private _commands : CommandsService) { 
+  }
 
   ngOnInit() {
   }
@@ -49,17 +50,21 @@ export class PannelComponent implements OnInit {
   }
 
   private formLine(){
+    this._commands.drones = this.drones;
     this._commands.selectedOperation = Operation.LINE;
   }
 
   private formColumn(){
+    this._commands.drones = this.drones;
     this._commands.selectedOperation = Operation.COLUMN;
   }
 
   private formCircle(){
+    this._commands.drones = this.drones;
     this._commands.selectedOperation = Operation.CIRCLE;
   }
   private sweep(){
+    this._commands.drones = this.drones;
     this._commands.selectedOperation = Operation.SWEEP;
   }
 
