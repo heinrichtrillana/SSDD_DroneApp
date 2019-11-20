@@ -110,6 +110,19 @@ export class CommandsService {
   private CIRCLE( coordinates : LatLng){
     console.log("Forming circkle at " + coordinates.toString());
 
+    const separation = 0.002;
+    const angle = (2*Math.PI)/this.drones.length;
+
+    this.drones.forEach( (x,i) =>{
+
+	var msg = {
+		    topic:"./obj",
+		    obj: [coordinates.lat + Math.cos((i)*angle)*separation, coordinates.lng + Math.sin((i)*angle)*separation]
+		  }
+
+      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+    })
+
     this.selectedOperation = null;
     this.selectedDrone = null;      
 
