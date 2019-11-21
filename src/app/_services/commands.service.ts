@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { LatLng } from 'leaflet';
 
 import {Operation} from '../_models/operation.model'
-import { MqttService } from 'ngx-mqtt';
+import { MqttService, IMqttMessage } from 'ngx-mqtt';
 import { Drone } from '../_models/drone.model';
 
 @Injectable({
@@ -128,13 +128,9 @@ export class CommandsService {
 
   }
   private SWEEP( coordinates : LatLng){
-    let origin = [];
-    let start = 0;
+    let origin = this.drones[0].position;
     
-    origin[0] = this.drones[0].position.x;
-    origin[1] = this.drones[0].position.y;
-
-    console.log("SWEEP FROM [" + origin.toString() + "] TO " + coordinates.toString());
+    console.log("SWEEP FROM (" + origin.x + ", " + origin.y + ") TO " + coordinates.toString());
 
     const separation = 0.002;
 
@@ -142,40 +138,48 @@ export class CommandsService {
 
       var msg = {
                   topic:"./obj",
-                  obj :[origin[0] - (i)*separation ,origin[1]]
+                  obj :[origin.x - (i)*separation ,origin.y]
                 }
                 
       this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
 
     })
 
-/*    while(start == 0){
-       let ok = 0;
-       setTimeout(function(){
-	  this.drones.forEach( (x,i) =>{
-             if(x.position.x == (origin[0]-(i)*separation) && x.position.y == origin[1]){
-	        ok = ok + 1;
-             }
-          })
-          if(ok == this.drones.length){
-	     start = 1;
+    var arrived = new Promise( (resolve) => {
+      let ok = 0;
+
+      this.drones.forEach( (x,i) =>{
+        this._mqttService.observe('swarm/' + x.id + '/pos').subscribe((message: IMqttMessage) =>{
+	  
+	  var drone = <any>JSON.parse(message.payload.toString());
+
+	  if( (drone.pos[0] == (origin.x-(i)*separation)) && (drone.pos[1] == origin.y)){
+	    ok = ok + 1;
+	  }else{
+	    ok = 0;
           }
-       },1000);
-    } 	 
-*/
-    this.drones.forEach( (x,i) =>{
 
-      var msg = {
-                  topic:"./obj",
-                  obj :[coordinates.lat - (i)*separation ,coordinates.lng]
-                }
+	  if( ok == this.drones.length)
+	    resolve();
+	});
+      });
+    });
+ 
+    arrived.then(()=>{
+      this.drones.forEach( (x,i) =>{
+
+        var msg = {
+                    topic:"./obj",
+                    obj :[coordinates.lat - (i)*separation ,coordinates.lng]
+                  }
                 
-      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+        this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
 
-    })
+      })
+    });
 
-    this.selectedOperation = null;
-    this.selectedDrone = null;      
+      this.selectedOperation = null;
+      this.selectedDrone = null;      
 
   }
 }
