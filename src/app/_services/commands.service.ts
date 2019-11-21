@@ -68,7 +68,7 @@ export class CommandsService {
 
     console.log("Forming line at " + coordinates.lng);
 
-    const separation = 0.005;
+    const separation = 0.002;
 
     this.drones.forEach( (x,i) =>{
 
@@ -88,13 +88,13 @@ export class CommandsService {
   private COLUMN( coordinates : LatLng){
     console.log("Forming column at " + coordinates.lat);
 
-    const separation = 0.005;
+    const separation = 0.002;
 
     this.drones.forEach( (x,i) =>{
 
       var msg = {
                   topic:"./obj",
-                  obj :[coordinates.lat + (i)*separation ,coordinates.lng]
+                  obj :[coordinates.lat - (i)*separation ,coordinates.lng]
                 }
                 
       this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
@@ -128,7 +128,51 @@ export class CommandsService {
 
   }
   private SWEEP( coordinates : LatLng){
-    console.log("SWEEP FROM " + coordinates.toString());
+    let origin = [];
+    let start = 0;
+    
+    origin[0] = this.drones[0].position.x;
+    origin[1] = this.drones[0].position.y;
+
+    console.log("SWEEP FROM [" + origin.toString() + "] TO " + coordinates.toString());
+
+    const separation = 0.002;
+
+    this.drones.forEach( (x,i) =>{
+
+      var msg = {
+                  topic:"./obj",
+                  obj :[origin[0] - (i)*separation ,origin[1]]
+                }
+                
+      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+
+    })
+
+/*    while(start == 0){
+       let ok = 0;
+       setTimeout(function(){
+	  this.drones.forEach( (x,i) =>{
+             if(x.position.x == (origin[0]-(i)*separation) && x.position.y == origin[1]){
+	        ok = ok + 1;
+             }
+          })
+          if(ok == this.drones.length){
+	     start = 1;
+          }
+       },1000);
+    } 	 
+*/
+    this.drones.forEach( (x,i) =>{
+
+      var msg = {
+                  topic:"./obj",
+                  obj :[coordinates.lat - (i)*separation ,coordinates.lng]
+                }
+                
+      this._mqttService.unsafePublish('swarm/' + x.id + '/obj', JSON.stringify(msg) , {qos: 1, retain: false});
+
+    })
 
     this.selectedOperation = null;
     this.selectedDrone = null;      
