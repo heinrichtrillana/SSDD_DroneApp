@@ -6,6 +6,8 @@ import { interval } from 'rxjs';
 import { MqttService, IMqttMessage } from 'ngx-mqtt';
 import { Marker, marker, icon, Layer } from 'leaflet';
 
+import {GrowlModule, GrowlService} from 'ngx-growl';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,20 +20,29 @@ export class AppComponent {
   public markers : Layer[] = [];
 
   constructor( private _commands : CommandsService,
-              private _mqttService : MqttService){
+              private _mqttService : MqttService,
+              private growlService: GrowlService){
+
 
     this._mqttService.observe('swarm/+/position').subscribe((message: IMqttMessage) => {
-     
       this.setDrones( message )
       this.setMarkers();
     });
 
     this._mqttService.observe('swarm/+/status').subscribe((message : IMqttMessage) => {
-      this.setStatuses( message );
+      this.setStatus( message );
+      this.checkStatus( message )
+    })
+
+    this._mqttService.observe('swarm/lastwill').subscribe((message : IMqttMessage) => {
+
+
+      this.growlService.addError({heading: 'ERROR' , message: message.payload.toString()});
+
     })
   }
 
-  private setStatuses( message : IMqttMessage){
+  private setStatus( message : IMqttMessage){
     var drone = <any>JSON.parse(message.payload.toString());
     var cached_drone = this.drones.find( x => x.id == drone.drone)
 
@@ -45,6 +56,17 @@ export class AppComponent {
         {state : drone.rotors[3]},
       ]
     }
+  }
+
+  private checkStatus(message : IMqttMessage) {
+    
+    var drone = <any>JSON.parse(message.payload.toString());
+
+    //Mensajes de alerta.
+    if( drone.battery < 25) {
+      this.growlService.addWarn({heading: drone.drone , message: 'Attention, low battery.'});
+    }
+
   }
 
   private setDrones( message : IMqttMessage){

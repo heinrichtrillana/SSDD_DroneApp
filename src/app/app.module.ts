@@ -13,6 +13,7 @@ import {
   MqttModule,
   IMqttServiceOptions
 } from 'ngx-mqtt';
+import { GrowlModule } from 'ngx-growl';
 
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
@@ -23,7 +24,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
 
 @NgModule({
   declarations: [AppComponent, MapComponent, PannelComponent],
-  imports: [BrowserModule, LeafletModule.forRoot(), AngularFontAwesomeModule,MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
+  imports: [BrowserModule, LeafletModule.forRoot(), AngularFontAwesomeModule,MqttModule.forRoot(MQTT_SERVICE_OPTIONS), GrowlModule.forRoot({maxMessages: 10, displayTimeMs: 5000})
   ],
   providers: [],
   bootstrap: [AppComponent]
