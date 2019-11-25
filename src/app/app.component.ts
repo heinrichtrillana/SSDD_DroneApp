@@ -20,11 +20,31 @@ export class AppComponent {
   constructor( private _commands : CommandsService,
               private _mqttService : MqttService){
 
-    this._mqttService.observe('swarm/+/pos').subscribe((message: IMqttMessage) => {
+    this._mqttService.observe('swarm/+/position').subscribe((message: IMqttMessage) => {
      
       this.setDrones( message )
       this.setMarkers();
     });
+
+    this._mqttService.observe('swarm/+/status').subscribe((message : IMqttMessage) => {
+      this.setStatuses( message );
+    })
+  }
+
+  private setStatuses( message : IMqttMessage){
+    var drone = <any>JSON.parse(message.payload.toString());
+    var cached_drone = this.drones.find( x => x.id == drone.drone)
+
+    if( cached_drone ){
+      cached_drone.battery = drone.battery;
+      cached_drone.rotation = drone.rotation;
+      cached_drone.rotor = [
+        {state : drone.rotors[0]},
+        {state : drone.rotors[1]},
+        {state : drone.rotors[2]},
+        {state : drone.rotors[3]},
+      ]
+    }
   }
 
   private setDrones( message : IMqttMessage){
