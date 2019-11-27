@@ -34,7 +34,7 @@ export class AppComponent {
       this.checkStatus( message )
     })
 
-    this._mqttService.observe('swarm/lastwill').subscribe((message : IMqttMessage) => {
+    this._mqttService.observe('swarm/lw').subscribe((message : IMqttMessage) => {
 
 
       this.growlService.addError({heading: 'ERROR' , message: message.payload.toString()});

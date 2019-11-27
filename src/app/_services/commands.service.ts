@@ -59,7 +59,7 @@ export class CommandsService {
               obj :[coordinates.lat,coordinates.lng]
               } 
 
-    this._mqttService.unsafePublish('swarm/' + droneId + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+    this._mqttService.unsafePublish('swarm/drone_' + droneId + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
     this.selectedOperation = null;
     this.selectedDrone = null;      
 
@@ -77,7 +77,7 @@ export class CommandsService {
                   obj :[coordinates.lat,coordinates.lng + (i)*separation]
                 }
                 
-      this._mqttService.unsafePublish('swarm/' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+      this._mqttService.unsafePublish('swarm/drone_' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
 
     })
     this.selectedOperation = null;
@@ -96,7 +96,7 @@ export class CommandsService {
                   obj :[coordinates.lat - (i)*separation ,coordinates.lng]
                 }
                 
-      this._mqttService.unsafePublish('swarm/' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+      this._mqttService.unsafePublish('swarm/drone_' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
 
     })
 
@@ -118,7 +118,7 @@ export class CommandsService {
 		    obj: [coordinates.lat + Math.cos((i)*angle)*separation, coordinates.lng + Math.sin((i)*angle)*separation]
 		  }
 
-      this._mqttService.unsafePublish('swarm/' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+      this._mqttService.unsafePublish('swarm/drone_' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
     })
 
     this.selectedOperation = null;
@@ -138,7 +138,7 @@ export class CommandsService {
                   obj :[origin.x - (i)*separation ,origin.y]
                 }
                 
-      this._mqttService.unsafePublish('swarm/' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+      this._mqttService.unsafePublish('swarm/drone_' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
 
     })
 
@@ -146,7 +146,7 @@ export class CommandsService {
       let ok = 0;
 
       this.drones.forEach( (x,i) =>{
-        this._mqttService.observe('swarm/' + x.id + '/position').subscribe((message: IMqttMessage) =>{
+        this._mqttService.observe('swarm/drone_' + x.id + '/position').subscribe((message: IMqttMessage) =>{
 	  
 	  var drone = <any>JSON.parse(message.payload.toString());
 
@@ -169,7 +169,7 @@ export class CommandsService {
                     obj :[coordinates.lat - (i)*separation ,coordinates.lng]
                   }
                 
-        this._mqttService.unsafePublish('swarm/' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
+        this._mqttService.unsafePublish('swarm/drone_' + x.id + '/objective', JSON.stringify(msg) , {qos: 1, retain: false});
 
       })
     });
