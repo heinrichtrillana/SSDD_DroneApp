@@ -1,6 +1,6 @@
 <div class="container-fluid content-row p-4 h-100">
   <div class="row pt-2 pb-2 title">
-    <h1 class="display-4">MQTT Drone Application</h1>
+    <h1 class="display-4" style="position: absolute; top: 0;">MQTT Drone Application</h1>
     <hr>
   </div>
 
@@ -19,15 +19,15 @@
     </div>
   </div>
 
-  <div class="row help" *ngIf="_commands.selectedOperation">
-      <div class="col-md-9">
-        <div class="alert alert-primary h-75" role="alert">
+  <div class="row help"  style="height: 9%" *ngIf="_commands.selectedOperation">
+      <div class="col-md-9 h-100">
+        <div class="alert alert-primary m-0 h-75" role="alert">
           Click on a position on the map.
         </div>          
       </div>
   
-      <div class="col-md-3 p-0" role="alert">
-          <button class="btn btn-danger btn-block h-75" 
+      <div class="col-md-3 p-0 h-100" role="alert">
+          <button class="btn btn-danger btn-block" 
           (click)="_commands.selectedOperation = null"> 
             Cancel Operation
           </button>

@@ -24,7 +24,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
 
 @NgModule({
   declarations: [AppComponent, MapComponent, PannelComponent],
-  imports: [BrowserModule, LeafletModule.forRoot(), AngularFontAwesomeModule,MqttModule.forRoot(MQTT_SERVICE_OPTIONS), GrowlModule.forRoot({maxMessages: 10, displayTimeMs: 5000})
+  imports: [BrowserModule, LeafletModule.forRoot(), AngularFontAwesomeModule,MqttModule.forRoot(MQTT_SERVICE_OPTIONS), GrowlModule.forRoot({maxMessages: 1, displayTimeMs: 4000})
   ],
   providers: [],
   bootstrap: [AppComponent]

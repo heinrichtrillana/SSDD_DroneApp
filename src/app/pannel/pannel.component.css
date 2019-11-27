@@ -8,3 +8,8 @@
 .drones .control table  tr{
     border-bottom: 0;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
+

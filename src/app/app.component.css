@@ -6,3 +6,7 @@
 .application-content{
     height: 85%;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}
