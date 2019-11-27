@@ -19,7 +19,7 @@ export class AppComponent {
   public drones : Drone[] = [];
   public markers : Layer[] = [];
 
-  constructor( private _commands : CommandsService,
+  constructor( public _commands : CommandsService,
               private _mqttService : MqttService,
               private growlService: GrowlService){
 
