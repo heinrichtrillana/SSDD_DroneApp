@@ -27,6 +27,7 @@ export class AppComponent {
     this._mqttService.observe('swarm/+/position').subscribe((message: IMqttMessage) => {
       this.setDrones( message )
       this.setMarkers();
+      this.shareObstacles( message );
     });
 
     this._mqttService.observe('swarm/+/status').subscribe((message : IMqttMessage) => {
@@ -40,6 +41,21 @@ export class AppComponent {
       this.growlService.addError({heading: 'ERROR' , message: message.payload.toString()});
 
     })
+  }
+
+  private shareObstacles( message : IMqttMessage) {
+
+    var drone = <any>JSON.parse(message.payload.toString());
+    var msg = {
+        drone: drone.drone, //Esto es el id
+        pos : drone.pos   // Esto lo envia según viene pos = [ x, y] 
+    }
+    
+    for( let drone of this.drones){
+      
+      this._mqttService.unsafePublish('swarm/drone_' + drone.id + '/obstacle', JSON.stringify(msg) , {qos: 1, retain: false});
+
+    }
   }
 
   private setStatus( message : IMqttMessage){
